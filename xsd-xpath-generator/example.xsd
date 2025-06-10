@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.example.com/orders"
+           xmlns="http://www.example.com/orders"
+           elementFormDefault="qualified">
+
+  <!-- Enumeration for order status -->
+  <xs:simpleType name="OrderStatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Pending"/>
+      <xs:enumeration value="Processing"/>
+      <xs:enumeration value="Shipped"/>
+      <xs:enumeration value="Delivered"/>
+      <xs:enumeration value="Cancelled"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Type for customer information -->
+  <xs:complexType name="CustomerType">
+    <xs:sequence>
+      <xs:element name="CustomerID" type="xs:string"/>
+      <xs:element name="Name" type="xs:string"/>
+      <xs:element name="Email" type="xs:string"/>
+      <xs:element name="Phone" type="xs:string" minOccurs="0"/>
+      <xs:element name="Address" type="AddressType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Type for address -->
+  <xs:complexType name="AddressType">
+    <xs:sequence>
+      <xs:element name="Street" type="xs:string"/>
+      <xs:element name="City" type="xs:string"/>
+      <xs:element name="State" type="xs:string"/>
+      <xs:element name="PostalCode">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:pattern value="\d{5}(-\d{4})?"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Country" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Type for individual item in an order -->
+  <xs:complexType name="OrderItemType">
+    <xs:sequence>
+      <xs:element name="ProductID" type="xs:string"/>
+      <xs:element name="ProductName" type="xs:string"/>
+      <xs:element name="Quantity" type="xs:int"/>
+      <xs:element name="UnitPrice" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Root Order element -->
+  <xs:element name="Order">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="OrderID" type="xs:string"/>
+        <xs:element name="OrderDate" type="xs:date"/>
+        <xs:element name="Customer" type="CustomerType"/>
+        <xs:element name="Items">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Item" type="OrderItemType" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TotalAmount" type="xs:decimal"/>
+        <xs:element name="Status" type="OrderStatusType"/>
+      </xs:sequence>
+      <xs:attribute name="currency" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
+

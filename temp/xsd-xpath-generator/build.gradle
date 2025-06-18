@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'jk.common.util'
+version = '1.0.0-SNAPSHOT'
+
+sourceCompatibility = '21'
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'jk.common.util.XsdXpathGenerator'
+}
+

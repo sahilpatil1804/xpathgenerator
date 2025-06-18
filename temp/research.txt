@@ -1,0 +1,8 @@
+├── xsd-json-converter@1.2.7
+├── xsd2json@1.12.22
+├── xsd2json2@1.0.15
+├── xsd2jsonschema@0.3.7
+└── xsd2ts@0.9.17
+
+java xjc
+

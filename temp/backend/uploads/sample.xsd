@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://example.com/ecommerce"
+           xmlns="http://example.com/ecommerce"
+           elementFormDefault="qualified">
+
+  <!-- Root Element -->
+  <xs:element name="EcommerceSystem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ShopInfo" type="ShopInfoType"/>
+        <xs:element name="Products" type="ProductsType"/>
+        <xs:element name="Customers" type="CustomersType"/>
+        <xs:element name="Orders" type="OrdersType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Shop Info -->
+  <xs:complexType name="ShopInfoType">
+    <xs:sequence>
+      <xs:element name="Name" type="xs:string"/>
+      <xs:element name="Owner" type="xs:string"/>
+      <xs:element name="CreatedDate" type="xs:date"/>
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!-- Products -->
+  <xs:complexType name="ProductsType">
+    <xs:sequence>
+      <xs:element name="Product" type="ProductType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ProductType">
+    <xs:sequence>
+      <xs:element name="ProductID" type="xs:string"/>
+      <xs:element name="Name" type="xs:string"/>
+      <xs:element name="Category" type="xs:string"/>
+      <xs:element name="Price" type="xs:decimal"/>
+      <xs:element name="Stock" type="xs:int"/>
+      <xs:element name="Tags" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Tag" type="xs:string" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="available" type="xs:boolean" default="true"/>
+  </xs:complexType>
+
+  <!-- Customers -->
+  <xs:complexType name="CustomersType">
+    <xs:sequence>
+      <xs:element name="Customer" type="CustomerType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CustomerType">
+    <xs:sequence>
+      <xs:element name="CustomerID" type="xs:string"/>
+      <xs:element name="Name" type="xs:string"/>
+      <xs:element name="Email" type="xs:string"/>
+      <xs:element name="Address" type="AddressType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AddressType">
+    <xs:sequence>
+      <xs:element name="Street" type="xs:string"/>
+      <xs:element name="City" type="xs:string"/>
+      <xs:element name="ZipCode" type="xs:string"/>
+      <xs:element name="Country" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Orders -->
+  <xs:complexType name="OrdersType">
+    <xs:sequence>
+      <xs:element name="Order" type="OrderType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OrderType">
+    <xs:sequence>
+      <xs:element name="OrderID" type="xs:string"/>
+      <xs:element name="CustomerID" type="xs:string"/>
+      <xs:element name="OrderDate" type="xs:date"/>
+      <xs:element name="Items">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Item" type="OrderItemType" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="TotalAmount" type="xs:decimal"/>
+      <xs:element name="Status" type="OrderStatusType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OrderItemType">
+    <xs:sequence>
+      <xs:element name="ProductID" type="xs:string"/>
+      <xs:element name="Quantity" type="xs:int"/>
+      <xs:element name="Price" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Enum for Order Status -->
+  <xs:simpleType name="OrderStatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Pending"/>
+      <xs:enumeration value="Processing"/>
+      <xs:enumeration value="Shipped"/>
+      <xs:enumeration value="Delivered"/>
+      <xs:enumeration value="Cancelled"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
+

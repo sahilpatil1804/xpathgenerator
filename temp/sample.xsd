@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://example.com/airline"
+           xmlns="http://example.com/airline"
+           elementFormDefault="qualified">
+
+  <!-- Root element -->
+  <xs:element name="Airline">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Flights">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Flight" type="FlightType" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="Passengers">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Passenger" type="PassengerType" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="Bookings">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Booking" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="PassengerID" type="xs:IDREF"/>
+                    <xs:element name="FlightNumber" type="xs:string"/>
+                    <xs:element name="SeatClass" type="SeatClassType"/>
+                  </xs:sequence>
+                  <xs:attribute name="bookingID" type="xs:ID" use="required"/>
+                  <xs:attribute name="status" default="Confirmed">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:enumeration value="Confirmed"/>
+                        <xs:enumeration value="Cancelled"/>
+                        <xs:enumeration value="Pending"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Flight Type -->
+  <xs:complexType name="FlightType">
+    <xs:sequence>
+      <xs:element name="FlightNumber" type="xs:string"/>
+      <xs:element name="Origin" type="xs:string"/>
+      <xs:element name="Destination" type="xs:string"/>
+      <xs:element name="DepartureTime" type="xs:dateTime"/>
+      <xs:element name="ArrivalTime" type="xs:dateTime"/>
+      <xs:element name="Aircraft">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Model" type="xs:string"/>
+            <xs:element name="Capacity" type="xs:positiveInteger"/>
+          </xs:sequence>
+          <xs:attribute name="tailNumber" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:ID" use="required"/>
+  </xs:complexType>
+
+  <!-- Passenger Type -->
+  <xs:complexType name="PassengerType">
+    <xs:sequence>
+      <xs:element name="Name">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="FirstName" type="xs:string"/>
+            <xs:element name="LastName" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DOB" type="xs:date"/>
+      <xs:element name="Gender">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Male"/>
+            <xs:enumeration value="Female"/>
+            <xs:enumeration value="Other"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:ID" use="required"/>
+    <xs:attribute name="frequentFlyer" type="xs:boolean" default="false"/>
+  </xs:complexType>
+
+  <!-- Seat Class Type -->
+  <xs:simpleType name="SeatClassType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Economy"/>
+      <xs:enumeration value="PremiumEconomy"/>
+      <xs:enumeration value="Business"/>
+      <xs:enumeration value="First"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Referential Integrity -->
+  <xs:key name="PassengerKey">
+    <xs:selector xpath="Passengers/Passenger"/>
+    <xs:field xpath="@id"/>
+  </xs:key>
+
+  <xs:key name="FlightKey">
+    <xs:selector xpath="Flights/Flight"/>
+    <xs:field xpath="@id"/>
+  </xs:key>
+
+</xs:schema>
+

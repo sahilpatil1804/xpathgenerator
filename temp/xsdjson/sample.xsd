@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://example.com/hr"
+    xmlns="http://example.com/hr"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+  <!-- Enumerations -->
+  <xs:simpleType name="EmploymentStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Active"/>
+      <xs:enumeration value="Inactive"/>
+      <xs:enumeration value="OnLeave"/>
+      <xs:enumeration value="Terminated"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DepartmentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="HR"/>
+      <xs:enumeration value="Engineering"/>
+      <xs:enumeration value="Marketing"/>
+      <xs:enumeration value="Finance"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ContactType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Email"/>
+      <xs:enumeration value="Phone"/>
+      <xs:enumeration value="Slack"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Attribute group -->
+  <xs:attributeGroup name="AuditAttributes">
+    <xs:attribute name="createdBy" type="xs:string" use="required"/>
+    <xs:attribute name="createdDate" type="xs:dateTime" use="required"/>
+    <xs:attribute name="modifiedBy" type="xs:string" use="optional"/>
+    <xs:attribute name="modifiedDate" type="xs:dateTime" use="optional"/>
+  </xs:attributeGroup>
+
+  <!-- Abstract base type -->
+  <xs:complexType name="ContactMethod" abstract="true">
+    <xs:attribute name="type" type="ContactType" use="required"/>
+  </xs:complexType>
+
+  <!-- Substitution group members -->
+  <xs:element name="EmailContact" substitutionGroup="Contact" type="EmailContactType"/>
+  <xs:element name="PhoneContact" substitutionGroup="Contact" type="PhoneContactType"/>
+  <xs:element name="Contact" type="ContactMethod" abstract="true"/>
+
+  <xs:complexType name="EmailContactType">
+    <xs:complexContent>
+      <xs:extension base="ContactMethod">
+        <xs:sequence>
+          <xs:element name="EmailAddress" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PhoneContactType">
+    <xs:complexContent>
+      <xs:extension base="ContactMethod">
+        <xs:sequence>
+          <xs:element name="PhoneNumber" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Address -->
+  <xs:complexType name="AddressType">
+    <xs:all>
+      <xs:element name="Street" type="xs:string"/>
+      <xs:element name="City" type="xs:string"/>
+      <xs:element name="ZipCode" type="xs:string"/>
+      <xs:element name="Country" type="xs:string"/>
+    </xs:all>
+  </xs:complexType>
+
+  <!-- Employee -->
+  <xs:complexType name="EmployeeType">
+    <xs:sequence>
+      <xs:element name="ID" type="xs:ID"/>
+      <xs:element name="FirstName" type="xs:string"/>
+      <xs:element name="LastName" type="xs:string"/>
+      <xs:element name="BirthDate" type="xs:date"/>
+      <xs:element name="Status" type="EmploymentStatus"/>
+      <xs:element name="Department" type="DepartmentType"/>
+      <xs:element name="Address" type="AddressType"/>
+      <xs:element ref="Contact" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="employeeNumber" type="xs:string" use="required"/>
+    <xs:attributeGroup ref="AuditAttributes"/>
+  </xs:complexType>
+
+  <!-- Department with restriction on name and manager reference -->
+  <xs:complexType name="DepartmentInfoType">
+    <xs:sequence>
+      <xs:element name="DeptID" type="xs:ID"/>
+      <xs:element name="Name" type="DepartmentType"/>
+      <xs:element name="ManagerID" type="xs:IDREF"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Root elements -->
+  <xs:element name="Company">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Departments">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Department" type="DepartmentInfoType" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Employees">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Employee" type="EmployeeType" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Constraints: ManagerID must refer to an Employee ID -->
+  <xs:key name="EmployeeIDKey">
+    <xs:selector xpath=".//Employee"/>
+    <xs:field xpath="ID"/>
+  </xs:key>
+
+  <xs:keyref name="ManagerRef" refer="EmployeeIDKey">
+    <xs:selector xpath=".//Department"/>
+    <xs:field xpath="ManagerID"/>
+  </xs:keyref>
+
+</xs:schema>
+

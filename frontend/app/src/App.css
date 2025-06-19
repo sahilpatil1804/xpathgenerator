@@ -1,0 +1,111 @@
+/* Application specific styles */
+
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+/* Custom animation for file upload hover */
+.file-upload-area {
+  transition: all 0.2s ease-in-out;
+}
+
+.file-upload-area:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Tree node animations */
+.tree-node {
+  transition: background-color 0.15s ease;
+}
+
+.tree-node:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Panel resize handle (for future enhancement) */
+.resize-handle {
+  width: 4px;
+  background: transparent;
+  cursor: col-resize;
+  transition: background-color 0.2s ease;
+}
+
+.resize-handle:hover {
+  background-color: #3b82f6;
+}
+
+/* Schema tree scrollbar customization */
+.schema-tree-container {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 #1e293b;
+}
+
+.schema-tree-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.schema-tree-container::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 3px;
+}
+
+.schema-tree-container::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+
+.schema-tree-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Data type badge styles */
+.data-type-badge {
+  font-size: 0.75rem;
+  font-family: 'Fira Code', 'JetBrains Mono', 'Monaco', 'Menlo', monospace;
+  letter-spacing: -0.025em;
+}
+
+/* Constraints text styling */
+.constraints-text {
+  font-family: 'Fira Code', 'JetBrains Mono', 'Monaco', 'Menlo', monospace;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .panel {
+    min-height: 50vh;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .tree-node:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .file-upload-area {
+    border-width: 2px;
+  }
+}
